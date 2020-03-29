@@ -2,3 +2,5 @@
 *.ipynb
 **/venv/
 .idea/
+Snake Game/game/
+Snake Game/.vscode
