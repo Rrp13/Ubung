@@ -6,13 +6,16 @@ ACCELARATION = 1
 # You don't really have to use this image though
 # Can just draw a rect
 # Which would make collision detection really easy :D
-SNAKE_PART_ICON = pygame.image.load("snake.png")
+# SNAKE_PART_ICON = pygame.image.load("snake.png")
 # Keeping this fixed for now
-ALL_OBJECTS_WIDTH = 32
+ALL_OBJECTS_WIDTH = 10
+All_OBJECTS_HEIGHT = 10
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
-FOOD_IMAGE = pygame.image.load("food.png")
+# FOOD_IMAGE = pygame.image.load("food.png")
 FPS = 30
+SNAKE_COLOR = (255, 0, 0)
+FOOD_COLOR = (0, 250, 0)
 
 # score
 pygame.init()
@@ -28,7 +31,7 @@ textX = 10
 textY = 10
 
 
-snake = [(10, 50)]
+snake = [(10, 50, ALL_OBJECTS_WIDTH, All_OBJECTS_HEIGHT)]
 speed = STARTING_SPEED
 
 velocity = (speed, 0)
@@ -49,17 +52,21 @@ def game_over_text():
 
 def generate_food_coordinates():
     return (
-        random.randint(0, SCREEN_WIDTH - ALL_OBJECTS_WIDTH),
-        random.randint(0, SCREEN_HEIGHT - ALL_OBJECTS_WIDTH)
+        random.randint(0 + ALL_OBJECTS_WIDTH, SCREEN_WIDTH
+                       - ALL_OBJECTS_WIDTH),
+        random.randint(0 + All_OBJECTS_HEIGHT, SCREEN_HEIGHT
+                       - All_OBJECTS_HEIGHT),
+        ALL_OBJECTS_WIDTH,
+        All_OBJECTS_HEIGHT
     )
 
 
 def draw_snake_part(coordinates):
-    screen.blit(SNAKE_PART_ICON, coordinates)
+    pygame.draw.rect(screen, SNAKE_COLOR, coordinates, 0)
 
 
 def draw_food(coordinates):
-    screen.blit(FOOD_IMAGE, coordinates)
+    pygame.draw.rect(screen, FOOD_COLOR, coordinates, 0)
 
 
 def has_collided_with_boundary(snake_head):
@@ -67,7 +74,7 @@ def has_collided_with_boundary(snake_head):
         snake_head[0] < 0
         or snake_head[0] + ALL_OBJECTS_WIDTH > SCREEN_WIDTH
         or snake_head[1] < 0
-        or snake_head[1] + ALL_OBJECTS_WIDTH > SCREEN_HEIGHT
+        or snake_head[1] + All_OBJECTS_HEIGHT > SCREEN_HEIGHT
     )
 
 
@@ -76,9 +83,9 @@ def has_collided(snake_head, obstacle):
         return False
     if snake_head[0] > obstacle[0] + ALL_OBJECTS_WIDTH:
         return False
-    if snake_head[1] + ALL_OBJECTS_WIDTH < obstacle[1]:
+    if snake_head[1] + All_OBJECTS_HEIGHT < obstacle[1]:
         return False
-    if snake_head[1] > obstacle[1] + ALL_OBJECTS_WIDTH:
+    if snake_head[1] > obstacle[1] + All_OBJECTS_HEIGHT:
         return False
     return True
 
@@ -104,7 +111,8 @@ def move_snake(snake, direction, elongate):
 
 
 def move_snake_head(snake, direction):
-    return snake[0] + direction[0], snake[1] + direction[1]
+    return snake[0] + direction[0], snake[1] + direction[1],
+    ALL_OBJECTS_WIDTH, All_OBJECTS_HEIGHT
 
 
 food = generate_food_coordinates()
@@ -112,10 +120,11 @@ food = generate_food_coordinates()
 clock = pygame.time.Clock()
 game_over = False
 while running:
+
     if game_over:
         # No need to render anything now
         continue
-    screen.fill((255, 255, 255))
+    screen.fill((0, 0, 0))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
