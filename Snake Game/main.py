@@ -1,5 +1,4 @@
 import pygame
-import math
 import random
 
 STARTING_SPEED = 10
@@ -15,18 +14,18 @@ SCREEN_HEIGHT = 600
 FOOD_IMAGE = pygame.image.load("food.png")
 FPS = 30
 
-#score
+# score
 pygame.init()
-screen=pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-running=True
-icon=pygame.image.load("icon.png")
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+running = True
+icon = pygame.image.load("icon.png")
 pygame.display.set_caption("Snake")
 pygame.display.set_icon(icon)
 
-score_value=0
-font=pygame.font.Font("freesansbold.ttf",32)
-textX=10
-textY=10
+score_value = 0
+font = pygame.font.Font("freesansbold.ttf", 32)
+textX = 10
+textY = 10
 
 
 snake = [(10, 50)]
@@ -34,17 +33,18 @@ speed = STARTING_SPEED
 
 velocity = (speed, 0)
 
-#gameover
-over_font = pygame.font.Font("freesansbold.ttf",60)
+# gameover
+over_font = pygame.font.Font("freesansbold.ttf", 60)
 
-def show_score(x,y):
-    score=font.render("Score: "+ str(score_value),True,(0,125,125))
-    screen.blit(score,(x,y))
+
+def show_score(x, y):
+    score = font.render("Score: " + str(score_value), True, (0, 125, 125))
+    screen.blit(score, (x, y))
 
 
 def game_over_text():
-    over_text=over_font.render("GAME OVER",True,(200,0,100))
-    screen.blit(over_text,(210,250))
+    over_text = over_font.render("GAME OVER", True, (200, 0, 100))
+    screen.blit(over_text, (210, 250))
 
 
 def generate_food_coordinates():
@@ -56,7 +56,7 @@ def generate_food_coordinates():
 
 def draw_snake_part(coordinates):
     screen.blit(SNAKE_PART_ICON, coordinates)
-    
+
 
 def draw_food(coordinates):
     screen.blit(FOOD_IMAGE, coordinates)
@@ -64,10 +64,10 @@ def draw_food(coordinates):
 
 def has_collided_with_boundary(snake_head):
     return (
-            snake_head[0] < 0
-            or snake_head[0] + ALL_OBJECTS_WIDTH > SCREEN_WIDTH
-            or snake_head[1] < 0
-            or snake_head[1] + ALL_OBJECTS_WIDTH > SCREEN_HEIGHT
+        snake_head[0] < 0
+        or snake_head[0] + ALL_OBJECTS_WIDTH > SCREEN_WIDTH
+        or snake_head[1] < 0
+        or snake_head[1] + ALL_OBJECTS_WIDTH > SCREEN_HEIGHT
     )
 
 
@@ -83,7 +83,9 @@ def has_collided(snake_head, obstacle):
     return True
 
 
-def self_collision(snake_head, snake_body):
+def self_collision(snake):
+    snake_head = snake[0]
+    snake_body = snake[1:]
     if (len(snake) > 1):
         for snake_body_part in snake_body:
             if (snake_head[0] == snake_body_part[0]
@@ -100,6 +102,7 @@ def move_snake(snake, direction, elongate):
         new_snake.append(snake[-1])
     return new_snake
 
+
 def move_snake_head(snake, direction):
     return snake[0] + direction[0], snake[1] + direction[1]
 
@@ -112,7 +115,7 @@ while running:
     if game_over:
         # No need to render anything now
         continue
-    screen.fill((255,255,255))
+    screen.fill((255, 255, 255))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -141,10 +144,11 @@ while running:
     for snake_part in snake:
         draw_snake_part(snake_part)
 
-    if self_collision(snake[0], snake[1:]):
+    if self_collision(snake):
         game_over = True
         game_over_text()
 
     draw_food(food)
+    show_score(10, 10)
     pygame.display.update()
     clock.tick(FPS)
