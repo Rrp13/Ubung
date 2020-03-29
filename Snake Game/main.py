@@ -83,6 +83,17 @@ def has_collided(snake_head, obstacle):
     return True
 
 
+def self_collision(snake_head, snake_body):
+    if (len(snake) > 1):
+        for snake_body_part in snake_body:
+            if (snake_head[0] == snake_body_part[0]
+                    and snake_head[1] == snake_body_part[1]):
+                return True
+        return False
+    else:
+        return False
+
+
 def move_snake(snake, direction, elongate):
     new_snake = [move_snake_head(snake[0], direction)] + snake[:-1]
     if elongate:
@@ -130,6 +141,9 @@ while running:
     for snake_part in snake:
         draw_snake_part(snake_part)
 
+    if self_collision(snake[0], snake[1:]):
+        game_over = True
+        game_over_text()
 
     draw_food(food)
     pygame.display.update()
