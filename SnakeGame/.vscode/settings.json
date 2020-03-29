@@ -1,8 +1,0 @@
-{
-    "python.linting.pylintEnabled": false,
-    "python.linting.enabled": true,
-    "python.linting.flake8Enabled": true,
-    "python.pythonPath": "e:\\Python\\SnakeGame\\game\\Scripts\\python.exe",
-    "terminal.integrated.allowChords": false
-    
-}
